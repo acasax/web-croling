@@ -104,6 +104,22 @@ export async function findNumberOfDisplayProducts(driver){
     return numberOfProductOnPage;
 }
 
+/** Function to get a product price from producet element to check is go to product page*/
+export async function getProductElementPrice(driver, id) {
+    let productPrice;
+    try {
+       
+        productPrice = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${id + 1}) > div > div.product-card__actions > div.product-card__prices`)).getText();
+    } catch (error) {
+        try {
+            productPrice = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${id + 1}) > div > div.product-card__actions > div.product-card__prices > span.product-card__new-price`)).getText();
+        } catch (error) {
+                   }
+    }
+
+    return productPrice;
+}
+
 /** Function to find and return article code **/
 export async function getArticleCode(driver) {
     let articleCodeFull;
@@ -189,11 +205,13 @@ export async function getProductDescription(driver) {
 export async function getProductPrice(driver) {
     let productPrice;
     try {
+       
         productPrice = await driver.findElement(By.css(`body > div.site > main > div.site__body > section > div:nth-child(1) > div > div > div.product.product--layout--standard > div > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
     } catch (error) {
         try {
             productPrice = await driver.findElement(By.css(`body > div.site > main > div.site__body > section > div:nth-child(1) > div > div > div.product.product--layout--standard > div > div.product__sidebar > div.product__prices > span.product-sale-price`)).getText();
         } catch (error) {
+            productPrice = await driver.findElement(By.css(` body > div.site > main > div > section > div > div > div > div > div > div.product__info > b > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
         }
     }
 

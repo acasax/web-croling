@@ -22,6 +22,7 @@ import {
     openLink,
     getProductBrand,
     getProductName,
+    getProductElementPrice,
 } from "./seleniumFunctions.js";
 import {
     products404PageTitle,
@@ -56,7 +57,7 @@ await openLink(scriptOneLink, driver);
 /** Create excel with header **/
 let workbook = createExcelWorkbook();
 let worksheet = createExcelWorksheet(workbook);
-createHeaderOfTable(tableHeader,worksheet);
+createHeaderOfTable(tableHeader, worksheet);
 saveDataInExcelFile(workbook);
 
 /** Find and disable modal for cookie and modal for promotions **/
@@ -89,43 +90,49 @@ for (let j = 1; j < lastPageNumber; j++) {
          */
 
         let productElement
-        try{
+        try {
             productElement = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${i + 1}) > div > div.product-card__image > a`));
-        } catch (e) {}
+        } catch (e) { }
 
-        if(productElement != null){
-            await productElement.click();
+        if (productElement != null) {
+            let productElementPrice = await getProductElementPrice(driver, i);
+            const priceNumberPart = productElementPrice.split(" ")[0];
+            const price = priceNumberPart.replace(".", "");
+            if (parseInt(price) > 250) {
+                await productElement.click();
 
-            let title = await driver.getTitle();
-            console.log(title)
-            if(title == "502 Bad Gateway"){
-                await driver.navigate().refresh();
+                let title = await driver.getTitle();
+                console.log(title)
+                if (title == "502 Bad Gateway") {
+                    await driver.navigate().refresh();
+                }
+                if (title !== products404PageTitle) {
+                    serialNumber++;
+                    let productPrice = await getProductPrice(driver);
+                    let productName = await getProductName(driver);
+                    console.log(productName)
+                    const priceNumberPart = productPrice.split(" ")[0];
+                    const price = priceNumberPart.replace(".", "");
+                    if (parseInt(price) > 250) {
+                        saveRowId++;
+                        let articleCode = await getArticleCode(driver);
+                        let category = await getCategoryText(driver);
+                        let subCategory = await getSubCategoryText(driver);
+                        let subCategory1 = await getSubCategory1Text(driver);
+                        let brand = await getProductBrand(driver);
+                        let productDescription = await getProductDescription(driver);
+                        let productImageUrlsText = await getProductImagesUrl(driver);
+                        createDataInSpecifyRow(worksheet, saveRowId + 1, [saveRowId, articleCode, category, subCategory, subCategory1, brand, productName, productDescription, productPrice, productImageUrlsText])
+                        saveDataInExcelFile(workbook);
+                    }
+
+                    console.log(`Finish ${serialNumber} / ${numberOfProductOnPage * lastPageNumber}`);
+                }
+
+                await driver.navigate().back()
+                await driver.wait(until.titleIs(`${productsPageTitle}${j > 1 ? ` | (${j})` : ''}`), timeout);
             }
-            if(title !== products404PageTitle){
-                serialNumber++;
-                let productPrice = await getProductPrice(driver);
-                let productName = await getProductName(driver);
-                console.log(productName)
-                const priceNumberPart = productPrice.split(" ")[0];
-                const price = priceNumberPart.replace(".", "");
-                if(parseInt(price) > 250){
-                    saveRowId++;
-                    let articleCode = await getArticleCode(driver);
-                    let category = await getCategoryText(driver);
-                    let subCategory = await getSubCategoryText(driver);
-                    let subCategory1 = await getSubCategory1Text(driver);
-                    let brand = await getProductBrand(driver);
-                    let productDescription = await getProductDescription(driver);
-                    let productImageUrlsText = await getProductImagesUrl(driver);
-                    createDataInSpecifyRow(worksheet, saveRowId + 1,[saveRowId, articleCode, category, subCategory, subCategory1, brand, productName, productDescription, productPrice, productImageUrlsText])
-                    saveDataInExcelFile(workbook);
-                } 
 
-                console.log(`Finish ${serialNumber} / ${numberOfProductOnPage * lastPageNumber}`);
-            }
-
-            await driver.navigate().back()
-            await driver.wait(until.titleIs(`${productsPageTitle}${j > 1 ? ` | (${j})` : ''}`), timeout);
         } else {
             console.log("productElement ne postoji");
         }
