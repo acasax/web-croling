@@ -205,7 +205,6 @@ export async function getProductDescription(driver) {
 export async function getProductPrice(driver) {
     let productPrice;
     try {
-
         productPrice = await driver.findElement(By.css(`body > div.site > main > div.site__body > section > div:nth-child(1) > div > div > div.product.product--layout--standard > div > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
     } catch (error) {
         try {
@@ -217,7 +216,11 @@ export async function getProductPrice(driver) {
                 try {
                     productPrice = await driver.findElement(By.css(`body > div.site > main > div > section > div:nth-child(1) > div:nth-child(1) > div > div > div.product__content > div.product__info > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
                 } catch (error) {
+                    try {
+                        productPrice = await  driver.findElement(By.css(`body > div.site > main > div > section > div > div > div > div > div > div.product__info > b > div.product__sidebar > div.product__prices > span.product-sale-price`)).getText();
+                    } catch (e) {
 
+                    }
                 }
             }
         }
