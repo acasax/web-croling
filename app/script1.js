@@ -76,7 +76,9 @@ numberOfProductOnPage = await findNumberOfDisplayProducts(driver);
 let lastPageNumber = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > nav > ul > li:nth-child(5) > a`)).getText();
 
 /** Loop to go through all pages **/
-for (let j = 1; j < lastPageNumber; j++) {
+for (let j = 518; j < lastPageNumber; j++) {
+    /** Go to next page **/
+    await driver.get(`https://www.prodavnicaalata.rs/proizvodi/strana/${j}/?`);
     for (let i = 0; i < numberOfProductOnPage; i++) {
         /**
          *
@@ -126,7 +128,7 @@ for (let j = 1; j < lastPageNumber; j++) {
                         saveDataInExcelFile(workbook);
                     }
 
-                    console.log(`Finish ${serialNumber} / ${numberOfProductOnPage * lastPageNumber}`);
+                    console.log(`Finish ${serialNumber} / ${(numberOfProductOnPage * lastPageNumber) - (4866 + 1302)}`);
                 }
 
                 await driver.navigate().back()
@@ -137,8 +139,7 @@ for (let j = 1; j < lastPageNumber; j++) {
             console.log("productElement ne postoji");
         }
     }
-    /** Go to next page **/
-    await driver.get(`https://www.prodavnicaalata.rs/proizvodi/strana/${j + 1}/?`);
+    
 }
 
 console.log("Finish all");
