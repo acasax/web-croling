@@ -22,7 +22,7 @@ import {
     openLink,
     getProductBrand,
     getProductName,
-    getProductElementPrice,
+    getProductElementPrice, getAvailabilityOfProduct,
 } from "./seleniumFunctions.js";
 import {
     products404PageTitle,
@@ -76,7 +76,7 @@ numberOfProductOnPage = await findNumberOfDisplayProducts(driver);
 let lastPageNumber = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > nav > ul > li:nth-child(5) > a`)).getText();
 
 /** Loop to go through all pages **/
-for (let j = 3881; j < lastPageNumber; j++) {
+for (let j = 0; j < lastPageNumber; j++) {
     /** Go to next page **/
     await driver.get(`https://www.prodavnicaalata.rs/proizvodi/strana/${j}/?`);
     for (let i = 0; i < numberOfProductOnPage; i++) {
@@ -105,7 +105,7 @@ for (let j = 3881; j < lastPageNumber; j++) {
 
                 let title = await driver.getTitle();
                 console.log(title)
-                while (title == "502 Bad Gateway") {
+                while (title === "502 Bad Gateway") {
                     title = await driver.getTitle();
                     await driver.navigate().refresh();
                 }
@@ -125,11 +125,12 @@ for (let j = 3881; j < lastPageNumber; j++) {
                         let brand = await getProductBrand(driver);
                         let productDescription = await getProductDescription(driver);
                         let productImageUrlsText = await getProductImagesUrl(driver);
-                        createDataInSpecifyRow(worksheet, saveRowId + 1, [saveRowId, articleCode, category, subCategory, subCategory1, brand, productName, productDescription, productPrice, productImageUrlsText])
+                        let productAvailability = await getAvailabilityOfProduct(driver);
+                        createDataInSpecifyRow(worksheet, saveRowId + 1, [saveRowId, articleCode, category, subCategory, subCategory1, brand, productName, productDescription, productPrice, productImageUrlsText, productAvailability])
                         saveDataInExcelFile(workbook);
                     }
 
-                    console.log(`Finish ${serialNumber} / ${(numberOfProductOnPage * lastPageNumber) - (34882)}`);
+                    console.log(`Finish ${serialNumber} / ${(numberOfProductOnPage * lastPageNumber)}`);
                 }
 
                 await driver.navigate().back()
@@ -140,7 +141,7 @@ for (let j = 3881; j < lastPageNumber; j++) {
             console.log("productElement ne postoji");
         }
     }
-    
+
 }
 
 console.log("Finish all");

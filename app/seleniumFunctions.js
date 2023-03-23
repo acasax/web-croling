@@ -114,7 +114,7 @@ export async function getProductElementPrice(driver, id) {
         try {
             productPrice = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${id + 1}) > div > div.product-card__actions > div.product-card__prices > span.product-card__new-price`)).getText();
         } catch (error) {
-            
+
             try {
                 productPrice = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${id + 1}) > div.product-card > div.product-card__actions > div.product-card__prices > span.product-card__new-price`)).getText();
             } catch (error) {
@@ -254,10 +254,10 @@ export async function getProductPrice(driver) {
                                     console.log(`Error price ${error}`)
                                 }
                             }
-                            
+
                         }
                     }
-                   
+
                 }
             }
         }
@@ -296,6 +296,18 @@ export async function getProductName(driver) {
     let productName;
     try {
         productName = await driver.findElement(By.css(`body > div.site > main > div.site__body > section > div:nth-child(1) > div > div > div.product.product--layout--standard > div > div.product__info > h1`)).getText();
+    } catch (error) {
+
+    }
+
+    return productName;
+}
+
+/** Function to find and return is product available **/
+export async function getAvailabilityOfProduct(driver) {
+    let productName;
+    try {
+        productName = await driver.findElement(By.css(`body > div.site > main > div > section > div:nth-child(1) > div.block > div > div.product.product--layout--standard > div > div.product__info > ul > li.product__meta-availability.mt4 > span`)).getText();
     } catch (error) {
 
     }

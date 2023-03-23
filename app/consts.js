@@ -9,7 +9,8 @@ export const tableHeader = [
     'Ime proizvoda',
     'Opis',
     'Cena',
-    'Slika'
+    'Slika',
+    'Dostupnost'
 ];
 export const waitTime = 0;
 export const timeout = 1999999;
