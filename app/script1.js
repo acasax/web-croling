@@ -76,7 +76,7 @@ numberOfProductOnPage = await findNumberOfDisplayProducts(driver);
 let lastPageNumber = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > nav > ul > li:nth-child(5) > a`)).getText();
 
 /** Loop to go through all pages **/
-for (let j = 518; j < lastPageNumber; j++) {
+for (let j = 3881; j < lastPageNumber; j++) {
     /** Go to next page **/
     await driver.get(`https://www.prodavnicaalata.rs/proizvodi/strana/${j}/?`);
     for (let i = 0; i < numberOfProductOnPage; i++) {
@@ -105,7 +105,8 @@ for (let j = 518; j < lastPageNumber; j++) {
 
                 let title = await driver.getTitle();
                 console.log(title)
-                if (title == "502 Bad Gateway") {
+                while (title == "502 Bad Gateway") {
+                    title = await driver.getTitle();
                     await driver.navigate().refresh();
                 }
                 if (title !== products404PageTitle) {
@@ -128,7 +129,7 @@ for (let j = 518; j < lastPageNumber; j++) {
                         saveDataInExcelFile(workbook);
                     }
 
-                    console.log(`Finish ${serialNumber} / ${(numberOfProductOnPage * lastPageNumber) - (4866 + 1302)}`);
+                    console.log(`Finish ${serialNumber} / ${(numberOfProductOnPage * lastPageNumber) - (34882)}`);
                 }
 
                 await driver.navigate().back()

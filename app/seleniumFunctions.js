@@ -114,6 +114,12 @@ export async function getProductElementPrice(driver, id) {
         try {
             productPrice = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${id + 1}) > div > div.product-card__actions > div.product-card__prices > span.product-card__new-price`)).getText();
         } catch (error) {
+            
+            try {
+                productPrice = await driver.findElement(By.css(`body > div.site > main > div > div.container > div > div.shop-layout__content > div > div > div.products-view__list.products-list > div > div:nth-child(${id + 1}) > div.product-card > div.product-card__actions > div.product-card__prices > span.product-card__new-price`)).getText();
+            } catch (error) {
+
+            }
         }
     }
 
@@ -123,16 +129,32 @@ export async function getProductElementPrice(driver, id) {
 /** Function to find and return article code **/
 export async function getArticleCode(driver) {
     let articleCodeFull;
-    try {
+     try {
         articleCodeFull = await driver.findElement(By.css(`body > div.site > main > div.site__body > section > div:nth-child(1) > div > div > div.product.product--layout--standard > div > div.product__info > ul > li.js-variant-sku.product-info`)).getText();
+        console.log(`article code: ${articleCodeFull}`);
     } catch (e) {
         try {
             articleCodeFull = await driver.findElement(By.css(`body > div.site > main > div > section > div > div > div > div > div > div.product__info > div.product__description > b > ul > li.js-variant-sku.product-info`)).getText();
+            console.log(`article code 1: ${articleCodeFull}`);
         } catch (e) {
-            console.log(`Cant find div where display article code`);
+            try {
+                articleCodeFull = await driver.findElement(By.css(`body > div.site > main > div > section > div > div:nth-child(1) > div > div > div.product__content > div.product__info > div.product__description > ul > li.js-variant-sku.product-info`)).getText();
+                console.log(`article code 2: ${articleCodeFull}`);
+            } catch (e) {
+                try {
+                    articleCodeFull = await driver.findElement(By.css(`body > div.site > main > div > section > div > div:nth-child(1) > div > div > div.product__content > div.product__info > div.product__description > ul > li:nth-child(3)`)).getText();
+                    console.log(`article code 3: ${articleCodeFull}`);
+                } catch (e) {
+                    try {
+                        articleCodeFull = await driver.findElement(By.css(`body > div.site > main > div > section > div > div:nth-child(13) > div > div > div.product__content > div.product__info > div.product__description > ul > li.js-variant-sku.product-info`)).getText();
+                        console.log(`article code 3: ${articleCodeFull}`);
+                    } catch (e) {
+                        console.log(`Cant find div where display article code`);
+                    }
+                }
+            }
         }
     }
-
     let articleCode;
     const regex = /:(.+)/;
     const match = articleCodeFull.match(regex);
@@ -205,6 +227,7 @@ export async function getProductDescription(driver) {
 export async function getProductPrice(driver) {
     let productPrice;
     try {
+
         productPrice = await driver.findElement(By.css(`body > div.site > main > div.site__body > section > div:nth-child(1) > div > div > div.product.product--layout--standard > div > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
     } catch (error) {
         try {
@@ -217,10 +240,24 @@ export async function getProductPrice(driver) {
                     productPrice = await driver.findElement(By.css(`body > div.site > main > div > section > div:nth-child(1) > div:nth-child(1) > div > div > div.product__content > div.product__info > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
                 } catch (error) {
                     try {
-                        productPrice = await  driver.findElement(By.css(`body > div.site > main > div > section > div > div > div > div > div > div.product__info > b > div.product__sidebar > div.product__prices > span.product-sale-price`)).getText();
-                    } catch (e) {
-
+                        productPrice = await driver.findElement(By.css(`body > div.site > main > div > section > div > div > div > div > div > div.product__info > b > div.product__sidebar > div.product__prices > span.product-sale-price`)).getText();
+                    } catch (error) {
+                        try {
+                            productPrice = await driver.findElement(By.css(`body > div.site > main > div > section > div > div:nth-child(1) > div > div > div.product__content > div.product__info > div.product__sidebar > div.product__prices > span.product-sale-price`)).getText();
+                        } catch (error) {
+                            try {
+                                productPrice = await driver.findElement(By.css(`body > div.site > main > div > section > div > div:nth-child(13) > div > div > div.product__content > div.product__info > div.product__sidebar > div.product__prices > span.product-sale-price`)).getText();
+                            } catch (error) {
+                                try {
+                                    productPrice = await driver.findElement(By.css(`body > div.site > main > div > section > div > div:nth-child(13) > div > div > div.product__content > div.product__info > div.product__sidebar > div.product__prices.product-standard-price`)).getText();
+                                } catch (error) {
+                                    console.log(`Error price ${error}`)
+                                }
+                            }
+                            
+                        }
                     }
+                   
                 }
             }
         }

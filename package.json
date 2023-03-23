@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "chrome-launcher": "^0.15.1",
-    "chromedriver": "^108.0.0",
+    "chromedriver": "^110.0.0",
     "exceljs": "^4.3.0",
     "geckodriver": "^3.2.0",
     "selenium-webdriver": "^4.7.1"
